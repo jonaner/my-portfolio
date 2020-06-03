@@ -29,6 +29,6 @@ function addRandomGreeting() {
 
 function addGreeting(){
     fetch('/data').then(response => response.text()).then((quote) => {
-    document.getElementById('quote-container').innerText = quote;
+      document.getElementById('quote-container').innerText = quote;
     });
 }
