@@ -26,6 +26,7 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+
 function addMessage() {
   fetch('/data').then(response => response.json()).then((message) => {
     const messageList = document.getElementById('message-container');
@@ -44,3 +45,4 @@ function createListElement(text) {
   liElement.innerText = text;
   return liElement;
 }
+
