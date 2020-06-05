@@ -31,9 +31,15 @@ function addMessage() {
   fetch('/data').then(response => response.json()).then((message) => {
     const messageList = document.getElementById('message-container')
     messageList.innerHTML = '';
-    console.log(message.message[0])
+    console.log(message)
     for (var i =0; i < message.length; i++){ 
-      messageList.appendChild(message.message[i]);
+      messageList.appendChild(createListElement(message[i]));
     }
     });
+}
+
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }

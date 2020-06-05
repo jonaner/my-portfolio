@@ -29,11 +29,12 @@ public class DataServlet extends HttpServlet {
   private final Gson gson = new Gson();
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    messages.add("\"message\": "+"Something crazy");
-    messages.add("\"message\": "+"Something simple");
-    messages.add("\"message\": "+"Something amazing");
+    messages.add("Something crazy");
+    messages.add("Something simple");
+    messages.add("Something amazing");
     String json = gson.toJson(messages);
     response.setContentType("application/json;");
     response.getWriter().println(json);
+    System.out.println(response.toString());
   }
 }
