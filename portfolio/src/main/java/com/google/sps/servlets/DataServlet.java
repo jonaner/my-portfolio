@@ -35,6 +35,5 @@ public class DataServlet extends HttpServlet {
     String json = gson.toJson(messages);
     response.setContentType("application/json;");
     response.getWriter().println(json);
-    System.out.println(response.toString());
   }
 }

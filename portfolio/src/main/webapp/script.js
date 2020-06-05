@@ -35,7 +35,7 @@ function addMessage() {
     for (var i =0; i < message.length; i++){ 
       messageList.appendChild(createListElement(message[i]));
     }
-    });
+  });
 }
 
 function createListElement(text) {
