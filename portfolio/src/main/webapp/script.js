@@ -29,20 +29,11 @@ function addRandomGreeting() {
 
 function addMessage() {
   fetch('/data').then(response => response.json()).then((message) => {
-    const messageList = document.getElementById('message-container');
-    messageList.innerHTML ='';
-    messageList.appendChild(
-      createListElement('Message 1: ' + message.message1));
-    messageList.appendChild(
-      createListElement('Message 2: ' + message.message2));
-    messageList.appendChild(
-      createListElement('Message 3: ' + message.message3));
+    const messageList = document.getElementById('message-container')
+    messageList.innerHTML = '';
+    console.log(message.message[0])
+    for (var i =0; i < message.length; i++){ 
+      messageList.appendChild(message.message[i]);
+    }
     });
 }
-
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
-}
-

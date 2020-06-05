@@ -16,31 +16,23 @@ package com.google.sps.servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import com.google.gson.Gson;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private final ArrayList<String> messages = new ArrayList<String>();
-  
+  private final List <String> messages = new ArrayList<>();
+  private final Gson gson = new Gson();
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    messages.add("Something crazy");
-    messages.add("Something simple");
-    messages.add("Something amazing");
-    String json = "{";
-    json+="\"message1\": ";
-    json+="\""+messages.get(0)+"\"";
-    json+=", ";
-    json+="\"message2\": ";
-    json+="\""+messages.get(1)+"\"";
-    json+=", ";
-    json+="\"message3\": ";
-    json+="\""+messages.get(2)+"\"";
-    json+= "}";
+    messages.add("\"message\": "+"Something crazy");
+    messages.add("\"message\": "+"Something simple");
+    messages.add("\"message\": "+"Something amazing");
+    String json = gson.toJson(messages);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
