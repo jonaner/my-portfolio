@@ -36,13 +36,6 @@ function addMessage() {
     for (var i =0; i < message.length; i++){ 
      messageList.appendChild(message[i]);
     }
-    messageList.innerHTML='';
-    messageList.appendChild(
-      createListElement('Message 1: ' + message.message1));
-    messageList.appendChild(
-      createListElement('Message 2: ' + message.message2));
-    messageList.appendChild(
-      createListElement('Message 3: ' + message.message3));
     });
 }
 
