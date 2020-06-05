@@ -33,6 +33,14 @@ public class DataServlet extends HttpServlet {
     messages.add("Something simple");
     messages.add("Something amazing");
     String json = gson.toJson(messages);
+  private final List<String> messagesList = new ArrayList<>();
+  Gson gson = new Gson();
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    messagesList.add("Something crazy");
+    messagesList.add("Something simple");
+    messagesList.add("Something amazing");
+    String json = gson.toJson(messagesList);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
