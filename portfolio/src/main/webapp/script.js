@@ -30,7 +30,7 @@ function addRandomGreeting() {
 function addMessage() {
   fetch('/data').then(response => response.json()).then((message) => {
     const messageList = document.getElementById('message-container');
-    messageList.innerHTML ='';
+    messageList.innerHTML='';
     messageList.appendChild(
       createListElement('Message 1: ' + message.message1));
     messageList.appendChild(
