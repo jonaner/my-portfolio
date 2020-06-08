@@ -27,8 +27,19 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
-function addGreeting(){
-    fetch('/data').then(response => response.text()).then((quote) => {
-      document.getElementById('quote-container').innerText = quote;
-    });
+function addMessage() {
+  fetch('/data').then(response => response.json()).then((message) => {
+    const messageList = document.getElementById('message-container')
+    messageList.innerHTML = '';
+    console.log(message)
+    for (var i =0; i < message.length; i++){ 
+      messageList.appendChild(createListElement(message[i]));
+    }
+  });
+}
+
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }
