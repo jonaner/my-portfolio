@@ -1,5 +1,5 @@
 body {
-  background-color:rgb(198, 245, 245);
+    background: linear-gradient(0.25turn, #1391c7, #10cee7, #1391c7);     
 }
 #content {
   text-align:center;

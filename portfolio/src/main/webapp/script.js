@@ -32,11 +32,10 @@ function addMessage() {
     
     const messageList = document.getElementById('past-messages');
     messageList.innerHTML = '';
-    console.log(message[0]);
-    for (var i =0; i < message.length; i++){ 
-     messageList.appendChild(createListElement(message[i]));
-    }
-    var currentCount = findCurrentCommentIndex(message);
+    messages.history.forEach((line) =>{ 
+      messageList.appendChild(createListElement(line));
+    });
+    
     const currentMessage = document.getElementById('current-message');
     currentMessage.innerHTML = '';
     if(message.length == 0){
@@ -53,14 +52,4 @@ function createListElement(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
   return liElement;
-}
-
-function findCurrentCommentIndex(array){
-  var index;
-  for(var i = array.length-1; i >= 0; i--){
-      if(array[i] != null){
-        index = i;
-      }
-  }
-  return index;
 }
