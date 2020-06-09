@@ -37,7 +37,7 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String username = getParameter(request ,/*name=*/ "username",/*defaultValue*/ "Anonymous");
+    String username = getParameter(request ,/* name= */ "username",/* defaultValue= */ "Anonymous");
     String message = getParameter(request , "message-data", "");
     String fullMessage = String.format("%s: %s",username,message);
     messages.add(fullMessage);
