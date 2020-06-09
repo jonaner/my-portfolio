@@ -14,6 +14,9 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +24,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.gson.Gson; 
-
+import com.google.gson.Gson;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private final List<String> messages = new ArrayList<String>();
-  Gson gson = new Gson();
+  private final List <String> messages = new ArrayList<>();
+  private final Gson gson = new Gson();
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String json = gson.toJson(messages);
@@ -37,12 +40,12 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String username = getParameter(request , "username", "Anonymus");
-    String message = getParameter(request , "message-data","");
-    messages.add(username +": "+ message);
-    int indexOfRecent = messages.indexOf("" + username +": "+ message + "");
+    String username = getParameter(request ,/* name= */ "username",/* defaultValue= */ "Anonymous");
+    String message = getParameter(request ,/* name= */ "message-data",/* defaultValue= */ "");
+    String fullMessage = String.format("%s: %s",username,message);
+    messages.add(fullMessage);
     response.setContentType("text/html;");
-    response.getWriter().println(messages.get(indexOfRecent));
+    response.getWriter().println(fullMessage);
     response.sendRedirect("/write-message.html");
   }
 
