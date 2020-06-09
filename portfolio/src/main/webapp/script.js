@@ -36,7 +36,6 @@ function addMessage() {
     for (var i =0; i < message.length; i++){ 
      messageList.appendChild(createListElement(message[i]));
     }
-    var currentCount = findCurrentCommentIndex(message);
     const currentMessage = document.getElementById('current-message');
     currentMessage.innerHTML = '';
     if(message.length == 0){
@@ -45,7 +44,6 @@ function addMessage() {
     else{
       currentMessage.appendChild(createListElement(message[message.length-1]));
     }
-    
   });
 }
 
@@ -53,14 +51,4 @@ function createListElement(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
   return liElement;
-}
-
-function findCurrentCommentIndex(array){
-  var index;
-  for(var i = array.length-1; i >= 0; i--){
-      if(array[i] != null){
-        index = i;
-      }
-  }
-  return index;
 }
