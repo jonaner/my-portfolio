@@ -37,12 +37,12 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String username = getParameter(request , "username", "Anonymus");
-    String message = getParameter(request , "message-data","");
-    messages.add(username +": "+ message);
-    int indexOfRecent = messages.indexOf("" + username +": "+ message + "");
+    String username = getParameter(request , "username", "Anonymous");
+    String message = getParameter(request , "message-data", "");
+    String fullMessage =  username +": "+ message;
+    messages.add(fullMessage);
     response.setContentType("text/html;");
-    response.getWriter().println(messages.get(indexOfRecent));
+    response.getWriter().println(fullMessage);
     response.sendRedirect("/write-message.html");
   }
 
