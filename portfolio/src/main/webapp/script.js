@@ -31,9 +31,9 @@ function addMessage() {
   fetch('/data').then(response => response.json()).then((messages) => {  
     const messageList = document.getElementById('past-messages');
     messageList.innerHTML = '';
-    for (var i = 0; i < messages.length-1; i++){ 
-      messageList.appendChild(createListElement(messages[i]));
-    }
+    messages.history.forEach((line) =>{ 
+      messageList.appendChild(createListElement(line));
+    });
     const currentMessage = document.getElementById('current-message');
     currentMessage.innerHTML = '';
     if(messages.length == 0){
