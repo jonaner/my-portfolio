@@ -27,13 +27,30 @@ import com.google.gson.Gson;
 public class DataServlet extends HttpServlet {
   private final List <String> messages = new ArrayList<>();
   private final Gson gson = new Gson();
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    messages.add("Something crazy");
-    messages.add("Something simple");
-    messages.add("Something amazing");
     String json = gson.toJson(messages);
     response.setContentType("application/json;");
     response.getWriter().println(json);
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String username = getParameter(request ,/* name= */ "username",/* defaultValue= */ "Anonymous");
+    String message = getParameter(request ,/* name= */ "message-data",/* defaultValue= */ "");
+    String fullMessage = String.format("%s: %s",username,message);
+    messages.add(fullMessage);
+    response.setContentType("text/html;");
+    response.getWriter().println(fullMessage);
+    response.sendRedirect("/write-message.html");
+  }
+
+  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return value;
   }
 }
