@@ -16,6 +16,7 @@ package com.google.sps.servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,15 +26,31 @@ import com.google.gson.Gson;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private final ArrayList<String> messages = new ArrayList<String>();
+  private final List<String> messages = new ArrayList<String>();
   Gson gson = new Gson();
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    messagesList.add("Something crazy");
-    messagesList.add("Something simple");
-    messagesList.add("Something amazing");
-    String json = gson.toJson(messagesList);
+    String json = gson.toJson(messages);
     response.setContentType("application/json;");
     response.getWriter().println(json);
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String username = getParameter(request , "username", "Anonymus");
+    String message = getParameter(request , "message-data","");
+    messages.add(username +": "+ message);
+    int indexOfRecent = messages.indexOf("" + username +": "+ message + "");
+    response.setContentType("text/html;");
+    response.getWriter().println(messages.get(indexOfRecent));
+    response.sendRedirect("/write-message.html");
+  }
+
+  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return value;
   }
 }
