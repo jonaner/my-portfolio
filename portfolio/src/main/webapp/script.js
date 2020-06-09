@@ -28,21 +28,18 @@ function addRandomGreeting() {
 }
 
 function addMessage() {
-  fetch('/data').then(response => response.json()).then((message) => {
-    
+  fetch('/data').then(response => response.json()).then((messages) => {  
     const messageList = document.getElementById('past-messages');
     messageList.innerHTML = '';
-    console.log(message[0]);
-    for (var i =0; i < message.length; i++){ 
-     messageList.appendChild(createListElement(message[i]));
+    for (var i = 0; i < messages.length-1; i++){ 
+      messageList.appendChild(createListElement(messages[i]));
     }
     const currentMessage = document.getElementById('current-message');
     currentMessage.innerHTML = '';
-    if(message.length == 0){
+    if(messages.length == 0){
       currentMessage.appendChild(createListElement("No new comments"))
-    }
-    else{
-      currentMessage.appendChild(createListElement(message[message.length-1]));
+    } else{
+      currentMessage.appendChild(createListElement(messages[messages.length-1]));
     }
   });
 }
