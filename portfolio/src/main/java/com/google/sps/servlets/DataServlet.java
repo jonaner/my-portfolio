@@ -17,6 +17,10 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,15 +28,28 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.gson.Gson;
+
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private final List <String> messages = new ArrayList<>();
-  private final Gson gson = new Gson();
-
+  
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    Query query = new Query("Message").addSort("time", SortDirection.DESCENDING);
+    
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    List <String> messages = new ArrayList<>();
+    for(Entity entity : results.asIterable()) {
+      long id = entity.getKey().getId();
+      String fullMessage = (String) entity.getProperty("newest-message");
+      long timestamp = (long) entity.getProperty("time");
+      
+      messages.add(fullMessage);
+    }
+
+    Gson gson = new Gson();
     String json = gson.toJson(messages);
     response.setContentType("application/json;");
     response.getWriter().println(json);
@@ -43,9 +60,14 @@ public class DataServlet extends HttpServlet {
     String username = getParameter(request ,/* name= */ "username",/* defaultValue= */ "Anonymous");
     String message = getParameter(request ,/* name= */ "message-data",/* defaultValue= */ "");
     String fullMessage = String.format("%s: %s",username,message);
-    messages.add(fullMessage);
-    response.setContentType("text/html;");
-    response.getWriter().println(fullMessage);
+    long timestamp = System.currentTimeMillis();
+
+    Entity messageEntity = new Entity("Message");
+    messageEntity.setProperty("time", timestamp);
+    messageEntity.setProperty("newest-message", fullMessage);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(messageEntity);
+
     response.sendRedirect("/write-message.html");
   }
 
