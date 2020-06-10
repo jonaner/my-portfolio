@@ -34,12 +34,12 @@ import javax.servlet.http.HttpServletResponse;
 public class DataServlet extends HttpServlet {
   
   Gson gson = new Gson();
+  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Message").addSort("time", SortDirection.DESCENDING);
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
     List<String> messages = new ArrayList<>();
@@ -58,8 +58,7 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String username =
-        getParameter(request, /* name= */ "username", /* defaultValue= */ "Anonymous");
+    String username = getParameter(request, /* name= */ "username", /* defaultValue= */ "Anonymous");
     String message = getParameter(request, /* name= */ "message-data", /* defaultValue= */ "");
     String fullMessage = String.format("%s: %s", username, message);
     long timestamp = System.currentTimeMillis();
@@ -67,7 +66,6 @@ public class DataServlet extends HttpServlet {
     Entity messageEntity = new Entity("Message");
     messageEntity.setProperty("time", timestamp);
     messageEntity.setProperty("newest-message", fullMessage);
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(messageEntity);
 
     response.sendRedirect("/write-message.html");
