@@ -1,13 +1,13 @@
 body {
-    background: linear-gradient(0.25turn, #1391c7, #10cee7, #1391c7);    
+  background: linear-gradient(0.25turn, #1391c7, #10cee7, #1391c7);
 }
 #content {
-  text-align:center;
+  text-align: center;
 }
 p.blocktext {
   margin-left: auto;
   margin-right: auto;
-  width: 750px
+  width: 750px;
 }
 #greeting-container {
   margin-top: 20px;

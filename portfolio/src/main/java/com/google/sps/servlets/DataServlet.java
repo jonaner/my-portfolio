@@ -32,20 +32,19 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Message").addSort("time", SortDirection.DESCENDING);
-    
+
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    List <String> messages = new ArrayList<>();
-    for(Entity entity : results.asIterable()) {
+    List<String> messages = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
       long id = entity.getKey().getId();
       String fullMessage = (String) entity.getProperty("newest-message");
       long timestamp = (long) entity.getProperty("time");
-      
+
       messages.add(fullMessage);
     }
 
@@ -57,9 +56,10 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String username = getParameter(request ,/* name= */ "username",/* defaultValue= */ "Anonymous");
-    String message = getParameter(request ,/* name= */ "message-data",/* defaultValue= */ "");
-    String fullMessage = String.format("%s: %s",username,message);
+    String username =
+        getParameter(request, /* name= */ "username", /* defaultValue= */ "Anonymous");
+    String message = getParameter(request, /* name= */ "message-data", /* defaultValue= */ "");
+    String fullMessage = String.format("%s: %s", username, message);
     long timestamp = System.currentTimeMillis();
 
     Entity messageEntity = new Entity("Message");
