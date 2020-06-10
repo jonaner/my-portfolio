@@ -13,7 +13,6 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
-
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -33,8 +32,10 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   
-  Gson gson = new Gson();
-  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private final Gson gson = new Gson();
+  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private static final String TIME = "time";
+  private static final String NEWEST_MESSAGE = "newest-message";
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -44,7 +45,6 @@ public class DataServlet extends HttpServlet {
 
     List<String> messages = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
       String fullMessage = (String) entity.getProperty("newest-message");
       long timestamp = (long) entity.getProperty("time");
 
@@ -64,8 +64,8 @@ public class DataServlet extends HttpServlet {
     long timestamp = System.currentTimeMillis();
 
     Entity messageEntity = new Entity("Message");
-    messageEntity.setProperty("time", timestamp);
-    messageEntity.setProperty("newest-message", fullMessage);
+    messageEntity.setProperty(TIME, timestamp);
+    messageEntity.setProperty(NEWEST_MESSAGE, fullMessage);
     datastore.put(messageEntity);
 
     response.sendRedirect("/write-message.html");
