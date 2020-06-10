@@ -28,20 +28,20 @@ function addRandomGreeting() {
 }
 
 function addMessage() {
-  fetch('/data').then(response => response.json()).then((messages) => {  
+  fetch('/data').then(response => response.json()).then((messages) => {
     const messageList = document.getElementById('past-messages');
     messageList.innerHTML = '';
     if(messages == null){
       console.log("no information yet");
     } else {
-      messages.forEach(element => { 
+      messages.forEach(element => {
         messageList.appendChild(createListElement(element));
       });
     }
     const currentMessage = document.getElementById('current-message');
     currentMessage.innerHTML = '';
     if(messages.length == 0){
-      currentMessage.appendChild(createListElement("No new comments"))
+      currentMessage.appendChild(createListElement("No new comments"));
     } else{
       currentMessage.appendChild(createListElement(messages[messages.length-1]));
     }
