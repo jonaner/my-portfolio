@@ -32,6 +32,9 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
+  
+  Gson gson = new Gson();
+  
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Message").addSort("time", SortDirection.DESCENDING);
@@ -48,7 +51,6 @@ public class DataServlet extends HttpServlet {
       messages.add(fullMessage);
     }
 
-    Gson gson = new Gson();
     String json = gson.toJson(messages);
     response.setContentType("application/json;");
     response.getWriter().println(json);
