@@ -34,8 +34,7 @@ function addMessage() {
     if (messages == null) {
       console.log('no information yet');
     } else {
-      messages.forEach(element => {
-        messageList.appendChild(createListElement(element));
+      messages.forEach(element => { messageList.appendChild(createListElement(element));
       });
     }
     const currentMessage = document.getElementById('current-message');
