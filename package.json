@@ -1,0 +1,30 @@
+{
+  "name": "step",
+  "version": "1.0.0",
+  "description": "This repo contains the projects you'll work on for the first half of STEP. It will follow this structure *  Week 1 - Setup *  Week 2 - Web Development *  Week 3 - Server *  Week 4 - Libraries *  Week 5 - TDD",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonaner/my-portfolio.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonaner/my-portfolio/issues"
+  },
+  "homepage": "https://github.com/jonaner/my-portfolio#readme",
+  "dependencies": {
+    "clang-format": "^1.4.0",
+    "css-validator": "^0.9.0",
+    "eslint": "^7.2.0",
+    "eslint-config-google": "^0.14.0",
+    "html-validate": "^2.23.0",
+    "prettier": "^2.0.5"
+  }
+}

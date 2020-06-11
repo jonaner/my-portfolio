@@ -15,31 +15,23 @@
 /**
  * Adds a random greeting to the page.
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
-}
-
-function addMessage() {
-  fetch('/data').then(response => response.json()).then((messages) => {  
+function addMessage() {  // eslint-disable-line
+  fetch('/data').then((response) => response.json()).then((messages) => {
     const messageList = document.getElementById('past-messages');
     messageList.innerHTML = '';
-    messages.history.forEach((line) =>{ 
-      messageList.appendChild(createListElement(line));
-    });
+    if (messages == null) {
+      console.log('no information yet');
+    } else {
+      messages.forEach((element) => {
+        messageList.appendChild(createListElement(element));
+      });
+    }
     const currentMessage = document.getElementById('current-message');
     currentMessage.innerHTML = '';
-    if(messages.length == 0){
-      currentMessage.appendChild(createListElement("No new comments"))
-    } else{
-      currentMessage.appendChild(createListElement(messages[messages.length-1]));
+    if (messages.length == 0) {
+      currentMessage.appendChild(createListElement('No new comments'));
+    } else {
+      currentMessage.appendChild(createListElement(messages[0]));
     }
   });
 }
