@@ -13,7 +13,6 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
-
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -32,23 +31,25 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
+  private final Gson gson = new Gson();
+  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private static final String TIME = "time";
+  private static final String NEWEST_MESSAGE = "newest-message";
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Message").addSort("time", SortDirection.DESCENDING);
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
     List<String> messages = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
       String fullMessage = (String) entity.getProperty("newest-message");
       long timestamp = (long) entity.getProperty("time");
 
       messages.add(fullMessage);
     }
 
-    Gson gson = new Gson();
     String json = gson.toJson(messages);
     response.setContentType("application/json;");
     response.getWriter().println(json);
@@ -63,9 +64,8 @@ public class DataServlet extends HttpServlet {
     long timestamp = System.currentTimeMillis();
 
     Entity messageEntity = new Entity("Message");
-    messageEntity.setProperty("time", timestamp);
-    messageEntity.setProperty("newest-message", fullMessage);
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    messageEntity.setProperty(TIME, timestamp);
+    messageEntity.setProperty(NEWEST_MESSAGE, fullMessage);
     datastore.put(messageEntity);
 
     response.sendRedirect("/write-message.html");
