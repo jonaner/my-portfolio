@@ -15,7 +15,7 @@
 /**
  * Adds a random greeting to the page.
  */
-function addMessage() {
+function addMessage() { //eslint-disable-line
   fetch('/data').then((response) => response.json()).then((messages) => {
     const messageList = document.getElementById('past-messages');
     messageList.innerHTML = '';
