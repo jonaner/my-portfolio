@@ -16,13 +16,13 @@
  * Adds a random greeting to the page.
  */
 function addMessage() {
-  fetch('/data').then(response) => response.json()).then((messages) => {
+  fetch('/data').then((response) => response.json()).then((messages) => {
     const messageList = document.getElementById('past-messages');
     messageList.innerHTML = '';
     if (messages == null) {
       console.log('no information yet');
     } else {
-      messages.forEach(element) => {
+      messages.forEach((element) => {
         messageList.appendChild(createListElement(element));
       });
     }
