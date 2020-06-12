@@ -46,7 +46,7 @@ public class DataServlet extends HttpServlet {
 
     PreparedQuery results = datastore.prepare(query);
 
-    List<String> limitedList = new ArrayList<>();
+    
     List<String> messages = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
       String fullMessage = (String) entity.getProperty(NEWEST_MESSAGE);
@@ -55,9 +55,11 @@ public class DataServlet extends HttpServlet {
       messages.add(fullMessage);
     }
 
-    for (int i = messages.size() - 1; i > messages.size() - 1 - limit; i--) {
-      limitedList.add(messages.get(i));
-    }
+    List<String> limitedList = 
+      Lists.reverse(messages)
+        .stream()
+        .limit(limit)
+        .collect(Collectors.toList());
 
     String json = gson.toJson(limitedList);
     response.setContentType("application/json;");
