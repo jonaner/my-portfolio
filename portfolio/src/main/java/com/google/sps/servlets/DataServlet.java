@@ -85,7 +85,7 @@ public class DataServlet extends HttpServlet {
 
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {
     String value = request.getParameter(name);
-    if (value == " ") {
+    if (value == null || value.isEmpty(value.trim())) {
       return defaultValue;
     }
     return value;
@@ -97,12 +97,12 @@ public class DataServlet extends HttpServlet {
       convertee = Integer.parseInt(beingconverted);
     } catch (NumberFormatException e) {
       System.err.println("Could not convert to int: " + beingconverted);
-      return -1;
+      return 5;
     }
 
     if (convertee < 1 || convertee > 10) {
       System.err.println("Number must be between 1 and 10");
-      return -1;
+      return 5;
     }
     return convertee;
   }
