@@ -35,47 +35,78 @@ public class DataServlet extends HttpServlet {
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private static final String TIME = "time";
   private static final String NEWEST_MESSAGE = "newest-message";
+  private static final String COMMENT_LIMIT = "comment-limit";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String limitString = request.getParameter(COMMENT_LIMIT);
+    int limit = 5;
+    if (limitString == null){
+      limit= 5;
+    }
+    else{
+      limit = convertToInt(limitString);
+    }
     Query query = new Query("Message").addSort("time", SortDirection.DESCENDING);
-
+    
     PreparedQuery results = datastore.prepare(query);
-
+    
+    List<String> limitedList = new ArrayList<> ();
     List<String> messages = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
-      String fullMessage = (String) entity.getProperty("newest-message");
-      long timestamp = (long) entity.getProperty("time");
+      String fullMessage = (String) entity.getProperty(NEWEST_MESSAGE);
+      long timestamp = (long) entity.getProperty(TIME);
 
       messages.add(fullMessage);
     }
 
-    String json = gson.toJson(messages);
+    for(int i = messages.size()-1; i >messages.size()-1-limit; i--){
+        limitedList.add(messages.get(i));
+    }
+    
+    String json = gson.toJson(limitedList);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String username =
-        getParameter(request, /* name= */ "username", /* defaultValue= */ "Anonymous");
+    String username = getParameter(request, /* name= */ "username", /* defaultValue= */ "Anonymous");
     String message = getParameter(request, /* name= */ "message-data", /* defaultValue= */ "");
     String fullMessage = String.format("%s: %s", username, message);
     long timestamp = System.currentTimeMillis();
 
+    
     Entity messageEntity = new Entity("Message");
     messageEntity.setProperty(TIME, timestamp);
     messageEntity.setProperty(NEWEST_MESSAGE, fullMessage);
+    
     datastore.put(messageEntity);
-
+    
     response.sendRedirect("/write-message.html");
   }
 
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {
     String value = request.getParameter(name);
-    if (value == null) {
+    if (value == "") {
       return defaultValue;
     }
     return value;
+  }
+
+  private int convertToInt(String beingConverted){
+      int convertee;
+      try {
+        convertee = Integer.parseInt(beingConverted);
+      } catch (NumberFormatException e) {
+        System.err.println("Could not convert to int: "+beingConverted);
+        return -1;
+      }
+
+      if (convertee< 1 || convertee> 10){
+        System.err.println("Number must be between 1 and 10");
+        return -1;
+      }
+      return convertee;
   }
 }

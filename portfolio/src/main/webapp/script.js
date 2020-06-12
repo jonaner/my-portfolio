@@ -26,12 +26,13 @@ function addMessage() {  // eslint-disable-line
         messageList.appendChild(createListElement(element));
       });
     }
+
     const currentMessage = document.getElementById('current-message');
     currentMessage.innerHTML = '';
     if (messages.length == 0) {
       currentMessage.appendChild(createListElement('No new comments'));
     } else {
-      currentMessage.appendChild(createListElement(messages[0]));
+      currentMessage.appendChild(createListElement(messages[messages.length-1]));
     }
   });
 }
