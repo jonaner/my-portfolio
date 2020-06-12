@@ -55,8 +55,6 @@ public class DataServlet extends HttpServlet {
       messages.add(fullMessage);
     }
 
-    limit = convertToInt(limitString);
-
     for (int i = messages.size() - 1; i > messages.size() - 1 - limit; i--) {
       limitedList.add(messages.get(i));
     }
