@@ -19,10 +19,13 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,22 +38,29 @@ public class DataServlet extends HttpServlet {
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private static final String TIME = "time";
   private static final String NEWEST_MESSAGE = "newest-message";
+  private static final String COMMENT_LIMIT = "comment-limit";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String limitString = request.getParameter("numComments");
+    int limit = convertToInt(limitString);
+
     Query query = new Query("Message").addSort("time", SortDirection.DESCENDING);
 
     PreparedQuery results = datastore.prepare(query);
 
     List<String> messages = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
-      String fullMessage = (String) entity.getProperty("newest-message");
-      long timestamp = (long) entity.getProperty("time");
+      String fullMessage = (String) entity.getProperty(NEWEST_MESSAGE);
+      long timestamp = (long) entity.getProperty(TIME);
 
       messages.add(fullMessage);
     }
 
-    String json = gson.toJson(messages);
+    List<String> limitedList =
+        Lists.reverse(messages).stream().limit(limit).collect(Collectors.toList());
+
+    String json = gson.toJson(limitedList);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
@@ -66,6 +76,7 @@ public class DataServlet extends HttpServlet {
     Entity messageEntity = new Entity("Message");
     messageEntity.setProperty(TIME, timestamp);
     messageEntity.setProperty(NEWEST_MESSAGE, fullMessage);
+
     datastore.put(messageEntity);
 
     response.sendRedirect("/write-message.html");
@@ -73,9 +84,25 @@ public class DataServlet extends HttpServlet {
 
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {
     String value = request.getParameter(name);
-    if (value == null) {
+    if (value == null || value.trim().isEmpty()) {
       return defaultValue;
     }
     return value;
+  }
+
+  private int convertToInt(String beingconverted) {
+    int convertee;
+    try {
+      convertee = Integer.parseInt(beingconverted);
+    } catch (NumberFormatException e) {
+      System.err.println("Could not convert to int: " + beingconverted);
+      return 5;
+    }
+
+    if (convertee < 1 || convertee > 10) {
+      System.err.println("Number must be between 1 and 10");
+      return 5;
+    }
+    return convertee;
   }
 }
