@@ -22,9 +22,9 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream;
-import java.util.Collections;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +48,6 @@ public class DataServlet extends HttpServlet {
 
     PreparedQuery results = datastore.prepare(query);
 
-    
     List<String> messages = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
       String fullMessage = (String) entity.getProperty(NEWEST_MESSAGE);
@@ -57,11 +56,8 @@ public class DataServlet extends HttpServlet {
       messages.add(fullMessage);
     }
 
-    List<String> limitedList = 
-      Lists.reverse(messages)
-        .stream()
-        .limit(limit)
-        .collect(Collectors.toList());
+    List<String> limitedList =
+        Lists.reverse(messages).stream().limit(limit).collect(Collectors.toList());
 
     String json = gson.toJson(limitedList);
     response.setContentType("application/json;");
