@@ -19,6 +19,9 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -39,13 +42,14 @@ public class DataServlet extends HttpServlet {
   private static final String TIME = "time";
   private static final String NEWEST_MESSAGE = "newest-message";
   private static final String COMMENT_LIMIT = "comment-limit";
+  private static final String SCORE = "score";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String limitString = request.getParameter("numComments");
     int limit = convertToInt(limitString);
 
-    Query query = new Query("Message").addSort("time", SortDirection.DESCENDING);
+    Query query = new Query("Message").addSort("time", SortDirection.ASCENDING);
 
     PreparedQuery results = datastore.prepare(query);
 
@@ -53,6 +57,7 @@ public class DataServlet extends HttpServlet {
     for (Entity entity : results.asIterable()) {
       String fullMessage = (String) entity.getProperty(NEWEST_MESSAGE);
       long timestamp = (long) entity.getProperty(TIME);
+      double score = (double) entity.getProperty(SCORE);
 
       messages.add(fullMessage);
     }
@@ -72,10 +77,12 @@ public class DataServlet extends HttpServlet {
     String message = getParameter(request, /* name= */ "message-data", /* defaultValue= */ "");
     String fullMessage = String.format("%s: %s", username, message);
     long timestamp = System.currentTimeMillis();
+    double score = getSentimentScore(message);
 
     Entity messageEntity = new Entity("Message");
     messageEntity.setProperty(TIME, timestamp);
     messageEntity.setProperty(NEWEST_MESSAGE, fullMessage);
+    messageEntity.setProperty(SCORE, score);
 
     datastore.put(messageEntity);
 
@@ -96,13 +103,22 @@ public class DataServlet extends HttpServlet {
       convertee = Integer.parseInt(beingconverted);
     } catch (NumberFormatException e) {
       System.err.println("Could not convert to int: " + beingconverted);
-      return 5;
+      return 1;
     }
 
     if (convertee < 1 || convertee > 10) {
       System.err.println("Number must be between 1 and 10");
-      return 5;
+      return 1;
     }
     return convertee;
+  }
+  private double getSentimentScore(String message) throws IOException {
+    Document doc =
+        Document.newBuilder().setContent(message).setType(Document.Type.PLAIN_TEXT).build();
+    LanguageServiceClient languageService = LanguageServiceClient.create();
+    Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+    double score = (double) sentiment.getScore();
+    languageService.close();
+    return score;
   }
 }

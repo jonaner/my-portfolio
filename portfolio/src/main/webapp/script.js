@@ -18,6 +18,7 @@
 function addMessage() {  // eslint-disable-line
   const limit = document.getElementById('comment-field').value;
   const url = '/data?numComments=' + limit;
+  console.log(limit);
   fetch(url).then((response) => response.json()).then((messages) => {
     const messageList = document.getElementById('past-messages');
     messageList.innerHTML = '';
@@ -34,8 +35,7 @@ function addMessage() {  // eslint-disable-line
     if (messages.length == 0) {
       currentMessage.appendChild(createListElement('No new comments'));
     } else {
-      currentMessage.appendChild(
-          createListElement(messages[messages.length - 1]));
+      currentMessage.appendChild(createListElement(messages[0]));
     }
   });
 }
