@@ -53,7 +53,6 @@ public class DataServlet extends HttpServlet {
 
     PreparedQuery results = datastore.prepare(query);
 
-    
     List<Double> scoreList = new ArrayList<Double>();
     List<String> messages = new ArrayList<String>();
     for (Entity entity : results.asIterable()) {
@@ -120,4 +119,3 @@ public class DataServlet extends HttpServlet {
     return score;
   }
 }
-

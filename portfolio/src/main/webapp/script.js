@@ -34,7 +34,8 @@ function addMessage() {  // eslint-disable-line
     if (messages.length == 0) {
       currentMessage.appendChild(createListElement('No new comments'));
     } else {
-      currentMessage.appendChild(createListElement(messages[messages.length-1]));
+      currentMessage.appendChild(
+          createListElement(messages[messages.length - 1]));
     }
   });
 }
