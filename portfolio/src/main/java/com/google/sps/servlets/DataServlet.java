@@ -53,21 +53,19 @@ public class DataServlet extends HttpServlet {
 
     PreparedQuery results = datastore.prepare(query);
 
-    List<String> messages = new ArrayList<>();
+    
+    List<Double> scoreList = new ArrayList<Double>();
+    List<String> messages = new ArrayList<String>();
     for (Entity entity : results.asIterable()) {
       String fullMessage = (String) entity.getProperty(NEWEST_MESSAGE);
       long timestamp = (long) entity.getProperty(TIME);
       double score = (double) entity.getProperty(SCORE);
-
+      scoreList.add(score);
       messages.add(fullMessage);
     }
 
-    List<String> limitedList =
-        Lists.reverse(messages).stream().limit(limit).collect(Collectors.toList());
-
-    String json = gson.toJson(limitedList);
     response.setContentType("application/json;");
-    response.getWriter().println(json);
+    response.getWriter().println(messages);
   }
 
   @Override
@@ -122,3 +120,4 @@ public class DataServlet extends HttpServlet {
     return score;
   }
 }
+

@@ -25,17 +25,16 @@ function addMessage() {  // eslint-disable-line
     if (messages == null) {
       console.log('no information yet');
     } else {
-      messages.forEach((element) => {
+      messages.message.forEach((element) => {
         messageList.appendChild(createListElement(element));
       });
     }
-
     const currentMessage = document.getElementById('current-message');
     currentMessage.innerHTML = '';
     if (messages.length == 0) {
       currentMessage.appendChild(createListElement('No new comments'));
     } else {
-      currentMessage.appendChild(createListElement(messages[0]));
+      currentMessage.appendChild(createListElement(messages[messages.length-1]));
     }
   });
 }
