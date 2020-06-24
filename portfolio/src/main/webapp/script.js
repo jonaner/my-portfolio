@@ -18,17 +18,17 @@
 function addMessage() {  // eslint-disable-line
   const limit = document.getElementById('comment-field').value;
   const url = '/data?numComments=' + limit;
+  console.log(limit);
   fetch(url).then((response) => response.json()).then((messages) => {
     const messageList = document.getElementById('past-messages');
     messageList.innerHTML = '';
     if (messages == null) {
       console.log('no information yet');
     } else {
-      messages.forEach((element) => {
+      messages.message.forEach((element) => {
         messageList.appendChild(createListElement(element));
       });
     }
-
     const currentMessage = document.getElementById('current-message');
     currentMessage.innerHTML = '';
     if (messages.length == 0) {
